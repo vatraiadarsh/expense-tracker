@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Menu, Container, Image, Icon } from "semantic-ui-react";
+import { Menu, Container, Icon } from "semantic-ui-react";
 
 const Header = ({ location: { pathname } }) => {
   const isActive = (route) => {

@@ -4,6 +4,8 @@ import colors from "colors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+
 
 
 const app = express();
@@ -13,6 +15,10 @@ connectDB()
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/api/users", userRoutes);
+
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
