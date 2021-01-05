@@ -11,10 +11,13 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../actions/userActions";
 
-const LoginPage = ({history}) => {
+const LoginPage = ({history }) => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
-  const { success, error, loading, xcu} = userLogin;
+  const { success, error, loading, userInfo } = userLogin;
+
+
+
   const INITIAL_STATE = {
     email: "",
     password: "",
@@ -38,10 +41,10 @@ const LoginPage = ({history}) => {
   };
 
   useEffect(() => {
-    if (xcu) {
-      history.push("/")
+    if (userInfo) {
+      history.push("/profile");
     }
-  },[])
+  }, [history, userInfo]);
 
   return (
     <>
@@ -86,9 +89,9 @@ const LoginPage = ({history}) => {
             />
 
             <Button
-              content="Signin"
+              content="SignIn"
               type="submit"
-              icon="Sign-in"
+              icon="sign in"
               disabled={disabled || loading || success}
               color="facebook"
             />
@@ -98,7 +101,7 @@ const LoginPage = ({history}) => {
         <Message attached="bottom">
           <Icon name="user circle" />
           Doesn't had an account? &nbsp;
-          <Link to="/register">
+          <Link to= "/login">
             <a>Register here</a>&nbsp;
           </Link>
           Instead

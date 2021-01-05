@@ -5,14 +5,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 
 import { userRegisterReducer, userLoginReducer } from "./reducers/userReducers";
 
-const userInfoFromStorage = localStorage.getItem("userInfo")
+const userInfoFromStorege = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
 const intialState = {
-  userLogin: {
-    xcu: userInfoFromStorage,
-  },
+  userLogin: { userInfo: userInfoFromStorege },
 };
 
 const reducer = combineReducers({

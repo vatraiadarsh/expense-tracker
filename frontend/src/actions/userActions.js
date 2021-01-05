@@ -6,6 +6,7 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGIN_FAILURE,
+  USER_LOGOUT_SUCCESS,
 } from "../constants/userConstants";
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -69,4 +70,9 @@ export const login = (email, password) => async (dispatch) => {
         : error.response,
     });
   }
+};
+
+export const logout = () => async (dispatch) => {
+  localStorage.removeItem("userInfo");
+  dispatch({ type: USER_LOGOUT_SUCCESS });
 };
