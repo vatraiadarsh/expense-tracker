@@ -4,6 +4,7 @@ import colors from "colors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import expenseRoutes from "./routes/expenseRoutes.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 
@@ -15,7 +16,7 @@ connectDB()
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/api/users", userRoutes);
-
+app.use("/api/expenses", expenseRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
