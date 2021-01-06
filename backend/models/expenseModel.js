@@ -8,7 +8,7 @@ const expenseSchema = mongoose.Schema(
       required: "Title is required",
     },
     amount: {
-      type: Number,
+      type: String,
       min: 0,
       required: "Amount is required",
     },
@@ -18,7 +18,7 @@ const expenseSchema = mongoose.Schema(
       required: "Category is required",
     },
     incurred_on: {
-      type: Date,
+      type: String,
       default: Date.now()
     },
     notes: {
