@@ -48,7 +48,10 @@ export const expenseListAllReducer = (state = { expense: [] }, action) => {
   }
 };
 
-export const expenseListByUserReducer = (state = { expense: [] }, action) => {
+export const expenseListByUserReducer = (
+  state = { expense: [],  },
+  action
+) => {
   switch (action.type) {
     case EXPENSE_LIST_BY_USER_REQUEST:
       return { loading: true, expense: [] };

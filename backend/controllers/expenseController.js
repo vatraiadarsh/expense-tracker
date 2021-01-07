@@ -8,7 +8,7 @@ import asyncHandler from "express-async-handler";
    */
 
 export const createExpense = asyncHandler(async (req, res) => {
-  const { title, amount, category, incurred_on, notes } = req.body;
+  const { title, amount, category, incurred_on, notes, shared_by } = req.body;
 
   const expense = new Expense({
     title,
@@ -17,6 +17,8 @@ export const createExpense = asyncHandler(async (req, res) => {
     incurred_on,
     notes,
     recorded_by: req.user._id,
+    shared_by: [req.user._id],
+    // 5fee48239d16fa2da0f34d4a
   });
   const createdExpense = await expense.save();
   res.status(201).json(createdExpense);
@@ -45,7 +47,6 @@ export const createExpense = asyncHandler(async (req, res) => {
 // });
 
 export const listAllExpense = asyncHandler(async (req, res) => {
- 
   const expenses = await Expense.find({})
     .sort("incurred_on")
     .populate("recorded_by", "_id name");
@@ -54,11 +55,10 @@ export const listAllExpense = asyncHandler(async (req, res) => {
 });
 
 export const listExpenseByUser = asyncHandler(async (req, res) => {
- 
-  const expenses = await Expense.find( { recorded_by: req.user._id })
+  const expenses = await Expense.find({ recorded_by: req.user._id })
     .sort("incurred_on")
-    .populate("recorded_by", "_id name");
+    .populate("recorded_by", "_id name")
+    .populate("shared_by", "_id name");
 
   res.status(201).json(expenses);
 });
-

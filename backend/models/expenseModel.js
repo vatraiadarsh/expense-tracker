@@ -8,7 +8,7 @@ const expenseSchema = mongoose.Schema(
       required: "Title is required",
     },
     amount: {
-      type: String,
+      type: Number,
       min: 0,
       required: "Amount is required",
     },
@@ -18,8 +18,8 @@ const expenseSchema = mongoose.Schema(
       required: "Category is required",
     },
     incurred_on: {
-      type: String,
-      default: Date.now()
+      type: Date,
+      default: Date.now(),
     },
     notes: {
       type: String,
@@ -29,6 +29,13 @@ const expenseSchema = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
+    shared_by: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+     
+    ],
   },
   {
     timestamps: true,

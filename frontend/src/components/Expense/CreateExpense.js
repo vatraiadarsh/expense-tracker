@@ -9,6 +9,7 @@ import {
   Segment,
   Icon,
   Container,
+  Checkbox,
 } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import { createExpense } from "../../actions/expenseActions";
@@ -19,12 +20,16 @@ function CreateExpense() {
   const expenseCreate = useSelector((state) => state.expenseCreate);
   const { loading, error, success } = expenseCreate;
 
+  const usersList = useSelector((state) => state.usersList);
+  const { users } = usersList;
+
   const INITIAL_STATE = {
     title: "",
     amount: "",
     category: "",
     incurred_on: new Date(),
     notes: "",
+    // shared_by: "",
   };
   const [expense, setExpense] = useState(INITIAL_STATE);
   const [disabled, setDisabled] = useState(false);
@@ -112,6 +117,15 @@ function CreateExpense() {
                 </MuiPickersUtilsProvider>
               </Form.Input>
             </Form.Group>
+
+            <Form.Input label="Shared By">
+              {users.map((user) => (
+                <>
+                  <Checkbox key={user._id} value={user._idt} label={user.name} />
+                  &nbsp;&nbsp;
+                </>
+              ))}
+            </Form.Input>
 
             <Form.TextArea
               fluid

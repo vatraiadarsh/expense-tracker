@@ -25,7 +25,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      status:user.status,
+      status: user.status,
       isAdmin: user.isAdmin,
     });
   } else {
@@ -48,7 +48,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      status:user.status,
+      status: user.status,
       isAdmin: user.isAdmin,
       token: generateToken(user._id),
     });
@@ -56,4 +56,9 @@ export const loginUser = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Invalid email or password");
   }
+});
+
+export const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.status(201).json(users);
 });

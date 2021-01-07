@@ -10,6 +10,7 @@ import {
   EXPENSE_LIST_BY_USER_REQUEST,
   EXPENSE_LIST_BY_USER_SUCCESS,
 } from "../constants/expenseConstants";
+import { USER_LIST_REQUEST, USER_LIST_SUCCESS } from "../constants/userConstants";
 
 export const createExpense = (
   title,
@@ -108,7 +109,6 @@ export const listByUserExpense = () => async (dispatch, getState) => {
 
     const { data } = await axios.get(`/api/expenses/my`, config);
 
-    console.log(data);
     dispatch({
       type: EXPENSE_LIST_BY_USER_SUCCESS,
       payload: data,

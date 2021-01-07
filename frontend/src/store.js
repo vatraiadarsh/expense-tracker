@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 import logger from "redux-logger";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import { userRegisterReducer, userLoginReducer } from "./reducers/userReducers";
+import { userRegisterReducer, userLoginReducer,usersListReducer} from "./reducers/userReducers";
 import { expenseCreateReducer,expenseListAllReducer,expenseListByUserReducer } from "./reducers/expenseReducers";
 
 const userInfoFromStorege = localStorage.getItem("userInfo")
@@ -20,6 +20,7 @@ const reducer = combineReducers({
   expenseCreate: expenseCreateReducer,
   expenseListAll:expenseListAllReducer,
   expenseListByUser:expenseListByUserReducer,
+  usersList:usersListReducer,
 });
 
 const middleware = [thunk, logger];

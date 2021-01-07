@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import ExpensePage from "./pages/ExpensePage";
+import UserPage from "./pages/UserPage";
 
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/login" component={LoginPage} />
           <Route path="/profile" component={ProfilePage} />
           <Route path="/expense" component={ExpensePage} />
+          <Route path="/users" component={UserPage} />
 
         </Switch>
       </BrowserRouter>
