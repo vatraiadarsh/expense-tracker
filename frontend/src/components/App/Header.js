@@ -36,6 +36,12 @@ const Header = ({ location: { pathname } }) => {
                   Profile
                 </Menu.Item>
               </Link>
+              <Link to="/expense/my">
+                <Menu.Item header active={isActive("/Expense")}>
+                  <Icon name="dollar sign" size="large" />
+                  Expense
+                </Menu.Item>
+              </Link>
               <Menu.Item onClick={handleLogout} header>
                 <Icon name="sign out" size="large" />
                 Logout

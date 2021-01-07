@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Link } from "react-router-dom";
 import {
   Form,
@@ -26,10 +23,10 @@ function CreateExpense() {
     title: "",
     amount: "",
     category: "",
+    incurred_on: new Date(),
     notes: "",
   };
   const [expense, setExpense] = useState(INITIAL_STATE);
-  const [selectedDate, handleDateChange] = useState(new Date());
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
@@ -42,7 +39,10 @@ function CreateExpense() {
     setExpense((prevState) => ({ ...prevState, [name]: value }));
   };
 
- 
+  const handleDateChange = (date) => {
+    setExpense((prevState) => ({ ...prevState, incurred_on: date }));
+  };
+
   const submitHandler = (e) => {
     const { title, amount, category, incurred_on, notes } = expense;
     e.preventDefault();
@@ -106,7 +106,7 @@ function CreateExpense() {
                     disableFuture
                     inputVariant="outlined"
                     name="incurred_on"
-                    value={selectedDate}
+                    value={expense.incurred_on}
                     onChange={handleDateChange}
                   />
                 </MuiPickersUtilsProvider>
