@@ -17,6 +17,7 @@ export const createExpense = (
   amount,
   category,
   incurred_on,
+  shared_by,
   notes
 ) => async (dispatch, getState) => {
   try {
@@ -42,6 +43,7 @@ export const createExpense = (
         amount,
         category,
         incurred_on,
+        shared_by,
         notes,
       },
       config

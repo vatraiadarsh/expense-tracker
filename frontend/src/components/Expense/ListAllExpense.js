@@ -23,7 +23,7 @@ function ListAllExpense() {
 
   useEffect(() => {
     dispatch(listAllExpense());
-  }, []);
+  }, [dispatch]);
   return (
     <>
       {loading ? (
@@ -40,6 +40,7 @@ function ListAllExpense() {
               <Table.HeaderCell>Title</Table.HeaderCell>
               <Table.HeaderCell>Category</Table.HeaderCell>
               <Table.HeaderCell>Amount</Table.HeaderCell>
+              <Table.HeaderCell>Shared By</Table.HeaderCell>
               <Table.HeaderCell>Notes</Table.HeaderCell>
               <Table.HeaderCell>Incurred On</Table.HeaderCell>
               <Table.HeaderCell>Recorded On</Table.HeaderCell>
@@ -64,6 +65,14 @@ function ListAllExpense() {
                   <Table.Cell>{exp.title}</Table.Cell>
                   <Table.Cell>{exp.category}</Table.Cell>
                   <Table.Cell>$ {exp.amount}</Table.Cell>
+                  <Table.Cell>
+                    {exp.shared_by.length === 0 && <h5>No Share</h5>}
+                    {exp.shared_by.map((r) => (
+                      <>
+                        <strong>{r.label},  &nbsp;</strong>
+                      </>
+                    ))}
+                  </Table.Cell>
                   <Table.Cell>{exp.notes}</Table.Cell>
                   <Table.Cell>
                     {new Date(exp.incurred_on).toDateString()}

@@ -29,13 +29,7 @@ const expenseSchema = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    shared_by: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-      },
-     
-    ],
+    shared_by: [],
   },
   {
     timestamps: true,

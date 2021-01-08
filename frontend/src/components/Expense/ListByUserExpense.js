@@ -21,7 +21,7 @@ function ListByUserExpense() {
   useEffect(() => {
     dispatch(listByUserExpense());
     dispatch(listAllUsers())
-  }, []);
+  }, [dispatch]);
   return (
     <>
       {loading ? (
@@ -60,7 +60,7 @@ function ListByUserExpense() {
                     {exp.shared_by.length === 0 && <h5>No Share</h5>}
                     {exp.shared_by.map((r) => (
                       <>
-                        <strong>{r.name}  &nbsp;</strong>
+                        <strong>{r.label}  &nbsp;</strong>
                       </>
                     ))}
                   </Table.Cell>

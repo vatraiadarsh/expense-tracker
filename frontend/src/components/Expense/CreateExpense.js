@@ -9,8 +9,9 @@ import {
   Segment,
   Icon,
   Container,
-  Checkbox,
 } from "semantic-ui-react";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import { useDispatch, useSelector } from "react-redux";
 import { createExpense } from "../../actions/expenseActions";
 
@@ -28,8 +29,8 @@ function CreateExpense() {
     amount: "",
     category: "",
     incurred_on: new Date(),
+    shared_by: [],
     notes: "",
-    // shared_by: "",
   };
   const [expense, setExpense] = useState(INITIAL_STATE);
   const [disabled, setDisabled] = useState(false);
@@ -48,13 +49,32 @@ function CreateExpense() {
     setExpense((prevState) => ({ ...prevState, incurred_on: date }));
   };
 
-  const submitHandler = (e) => {
-    const { title, amount, category, incurred_on, notes } = expense;
-    e.preventDefault();
-    dispatch(createExpense(title, amount, category, incurred_on, notes));
+  const handleSelectChange = (selectedOption) => {
+    setExpense((prevState) => ({ ...prevState, shared_by: selectedOption }));
   };
+
+  const submitHandler = (e) => {
+    const { title, amount, category, incurred_on, shared_by, notes } = expense;
+    e.preventDefault();
+    dispatch(
+      createExpense(title, amount, category, incurred_on, shared_by, notes)
+    );
+  };
+
+  const userOptions = users.map((user) => ({
+    label: user.name,
+    value: user._id,
+  }));
+
+  const u = users.map((user) => ({
+    name: user.name,
+  }));
+
+  const animatedComponents = makeAnimated();
+
   return (
     <>
+      {JSON.stringify(expense)}
       <Container text>
         <Message
           attached
@@ -74,7 +94,7 @@ function CreateExpense() {
           <Segment>
             <Form.Input
               fluid
-              icon="user"
+              icon="pencil alternate"
               iconPosition="left"
               label="Title"
               name="title"
@@ -84,9 +104,10 @@ function CreateExpense() {
             />
             <Form.Input
               fluid
-              icon="envelope"
+              icon="dollar sign"
               iconPosition="left"
               label="Amount"
+              type="Number"
               name="amount"
               placeholder="Amount"
               value={expense.amount}
@@ -96,7 +117,7 @@ function CreateExpense() {
             <Form.Group widths="equal">
               <Form.Input
                 fluid
-                icon="user"
+                icon="buromobelexperte"
                 iconPosition="left"
                 label="Category"
                 name="category"
@@ -118,14 +139,20 @@ function CreateExpense() {
               </Form.Input>
             </Form.Group>
 
-            <Form.Input label="Shared By">
-              {users.map((user) => (
-                <>
-                  <Checkbox key={user._id} value={user._idt} label={user.name} />
-                  &nbsp;&nbsp;
-                </>
-              ))}
-            </Form.Input>
+            <Form.Field>
+              <label>Expense Shared By</label>
+
+              <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                value={expense.shared_by}
+                isMulti
+                isSearchable
+                options={userOptions}
+                name="shared_by"
+                onChange={handleSelectChange}
+              />
+            </Form.Field>
 
             <Form.TextArea
               fluid
