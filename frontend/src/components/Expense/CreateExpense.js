@@ -14,6 +14,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { useDispatch, useSelector } from "react-redux";
 import { createExpense } from "../../actions/expenseActions";
+import { listByUserExpense } from "../../actions/expenseActions";
 
 function CreateExpense() {
   const dispatch = useDispatch();
@@ -59,15 +60,13 @@ function CreateExpense() {
     dispatch(
       createExpense(title, amount, category, incurred_on, shared_by, notes)
     );
+
+   
   };
 
   const userOptions = users.map((user) => ({
     label: user.name,
     value: user._id,
-  }));
-
-  const u = users.map((user) => ({
-    name: user.name,
   }));
 
   const animatedComponents = makeAnimated();
@@ -93,7 +92,7 @@ function CreateExpense() {
 
           <Segment>
             <Form.Input
-              fluid
+              fluid={true}
               icon="pencil alternate"
               iconPosition="left"
               label="Title"
@@ -103,7 +102,7 @@ function CreateExpense() {
               onChange={handlechange}
             />
             <Form.Input
-              fluid
+              fluid={true}
               icon="dollar sign"
               iconPosition="left"
               label="Amount"
@@ -116,7 +115,7 @@ function CreateExpense() {
 
             <Form.Group widths="equal">
               <Form.Input
-                fluid
+                fluid={true}
                 icon="buromobelexperte"
                 iconPosition="left"
                 label="Category"
@@ -155,7 +154,7 @@ function CreateExpense() {
             </Form.Field>
 
             <Form.TextArea
-              fluid
+              fluid={true}
               label="Notes"
               name="notes"
               placeholder="Notes"

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import {
   Icon,
-  Label,
   Menu,
+  Button,
+  Label,
   Table,
   Loader,
   Message,
@@ -11,19 +11,25 @@ import {
 } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import { listAllExpense } from "../../actions/expenseActions";
+import { useHistory } from "react-router-dom";
 
 function ListAllExpense() {
   const dispatch = useDispatch();
 
+  const history = useHistory();
   const expenseListAll = useSelector((state) => state.expenseListAll);
-  const { loading, error, expense } = expenseListAll;
+  const { loading, error, expenses } = expenseListAll;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    dispatch(listAllExpense());
-  }, [dispatch]);
+    if (!userInfo) {
+      history.push("/login");
+    } else {
+      dispatch(listAllExpense());
+    }
+  }, [dispatch, history, userInfo]);
   return (
     <>
       {loading ? (
@@ -33,59 +39,56 @@ function ListAllExpense() {
       ) : error ? (
         <Message negative>{error}</Message>
       ) : (
-        <Table color="red" celled>
+        <Table color="green" celled>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Recorded By</Table.HeaderCell>
               <Table.HeaderCell>Title</Table.HeaderCell>
               <Table.HeaderCell>Category</Table.HeaderCell>
               <Table.HeaderCell>Amount</Table.HeaderCell>
-              <Table.HeaderCell>Shared By</Table.HeaderCell>
               <Table.HeaderCell>Notes</Table.HeaderCell>
               <Table.HeaderCell>Incurred On</Table.HeaderCell>
               <Table.HeaderCell>Recorded On</Table.HeaderCell>
+              <Table.HeaderCell>Shared By</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-
           <Table.Body>
-            {expense.map((exp) => (
-              <>
-                <Table.Row>
-                  <Table.Cell>
-                    {exp.recorded_by._id === userInfo._id ? (
-                      <Label ribbon color="red">
-                        {exp.recorded_by.name}
-                      </Label>
-                    ) : (
-                      <Label ribbon color="black">
-                        {exp.recorded_by.name}
-                      </Label>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell>{exp.title}</Table.Cell>
-                  <Table.Cell>{exp.category}</Table.Cell>
-                  <Table.Cell>$ {exp.amount}</Table.Cell>
-                  <Table.Cell>
-                    {exp.shared_by.length === 0 && <h5>No Share</h5>}
-                    {exp.shared_by.map((r) => (
-                      <>
-                        <strong>{r.label},  &nbsp;</strong>
-                      </>
-                    ))}
-                  </Table.Cell>
-                  <Table.Cell>{exp.notes}</Table.Cell>
-                  <Table.Cell>
-                    {new Date(exp.incurred_on).toDateString()}
-                  </Table.Cell>
-                  <Table.Cell>{exp.createdAt.substring(0, 10)}</Table.Cell>
-                </Table.Row>
-              </>
+            {expenses.map((expense) => (
+              <Table.Row>
+                <Table.Cell>
+                  {expense.recorded_by._id === userInfo._id ? (
+                    <Label ribbon color="red">
+                      {expense.recorded_by.name}
+                    </Label>
+                  ) : (
+                    <Label ribbon color="black">
+                      {expense.recorded_by.name}
+                    </Label>
+                  )}
+                </Table.Cell>
+                <Table.Cell>{expense.title}</Table.Cell>
+                <Table.Cell>{expense.category}</Table.Cell>
+                <Table.Cell>$ {expense.amount}</Table.Cell>
+                <Table.Cell>{expense.notes}</Table.Cell>
+                <Table.Cell>
+                  {new Date(expense.incurred_on).toDateString()}
+                </Table.Cell>
+                <Table.Cell>{expense.createdAt.substring(0, 10)}</Table.Cell>
+                <Table.Cell>
+                  {expense.shared_by.length === 0 && <h5>No Share</h5>}
+                  {expense.shared_by.map((r) => (
+                    <>
+                      <strong key={r._value}>{r.label} &nbsp;</strong>
+                    </>
+                  ))}
+                </Table.Cell>
+              </Table.Row>
             ))}
           </Table.Body>
 
           <Table.Footer>
             <Table.Row>
-              <Table.HeaderCell colSpan="7">
+              <Table.HeaderCell colSpan="8">
                 <Menu floated="right" pagination>
                   <Menu.Item as="a" icon>
                     <Icon name="chevron left" />

@@ -42,7 +42,13 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+
+  const inactiveStatus = await User.findOne({ status: "inactive", email });
+  if (inactiveStatus) {
+    res.status(401);
+    throw new Error("Your account is inactive/suspended please contact admin");
+  }
+  const user = await User.findOne({ status: "active", email });
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
@@ -61,4 +67,10 @@ export const loginUser = asyncHandler(async (req, res) => {
 export const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
   res.status(201).json(users);
+});
+
+export const updateUserStatus = asyncHandler(async (req, res) => {
+  const { _id, status } = req.body;
+  await User.findByIdAndUpdate({ _id }, { status });
+  res.status(203).send("User Updated");
 });

@@ -1,19 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import {
   Icon,
-  Label,
+  Button,
+  Checkbox,
   Menu,
+  Label,
   Table,
   Loader,
   Message,
   Dimmer,
 } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
-import { listAllUsers } from "../../actions/userActions";
+import { listAllUsers, updateUserStatus } from "../../actions/userActions";
+import { useHistory } from "react-router-dom";
 
 function ListAllUsers() {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const usersList = useSelector((state) => state.usersList);
   const { loading, error, users } = usersList;
@@ -22,8 +26,13 @@ function ListAllUsers() {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    dispatch(listAllUsers());
-  }, []);
+    if (!userInfo) {
+      history.push("/login");
+    } else {
+      dispatch(listAllUsers());
+    }
+  }, [dispatch, history, userInfo]);
+
   return (
     <>
       {loading ? (
@@ -39,18 +48,14 @@ function ListAllUsers() {
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Email</Table.HeaderCell>
               <Table.HeaderCell>Created At</Table.HeaderCell>
+              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell>Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
           <Table.Body>
             {users.map((user) => (
-              <>
-                <Table.Row>
-                  <Table.Cell>{user.name}</Table.Cell>
-                  <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell>{user.createdAt.substring(0, 10)}</Table.Cell>
-                </Table.Row>
-              </>
+              <UserStatus key={user._id} user={user} />
             ))}
           </Table.Body>
 
@@ -76,6 +81,47 @@ function ListAllUsers() {
       )}
     </>
   );
+
+  function UserStatus({ user }) {
+    const [status, setStatus] = useState(user.status === "active");
+    const isFirstRun = useRef(true);
+
+    useEffect(() => {
+      if (isFirstRun.current) {
+        isFirstRun.current = false;
+        return;
+      }
+      dispatch(updateUserStatus(user._id, status ? "active" : "inactive"));
+    }, [status]);
+
+    function handleChangeStatus() {
+      setStatus((prevState) => !prevState);
+    }
+
+    return (
+      <Table.Row>
+        <Table.Cell>{user.name}</Table.Cell>
+        <Table.Cell>{user.email}</Table.Cell>
+        <Table.Cell>{user.createdAt.substring(0, 10)}</Table.Cell>
+
+        <Table.Cell>
+          {status ? (
+            <Label content="active" color="green" />
+          ) : (
+            <Label content="inactive" color="red" />
+          )}
+        </Table.Cell>
+        <Table.Cell>
+          <Checkbox
+            toggle
+            color="red"
+            checked={status}
+            onChange={handleChangeStatus}
+          />
+        </Table.Cell>
+      </Table.Row>
+    );
+  }
 }
 
 export default ListAllUsers;

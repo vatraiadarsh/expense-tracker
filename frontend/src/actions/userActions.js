@@ -1,4 +1,5 @@
 import axios from "axios";
+import { get } from "mongoose";
 import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
@@ -10,6 +11,9 @@ import {
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_FAILURE,
+  USER_STATUS_UPDATE_FAILURE,
+  USER_STATUS_UPDATE_REQUEST,
+  USER_STATUS_UPDATE_SUCCESS,
 } from "../constants/userConstants";
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -80,8 +84,6 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: USER_LOGOUT_SUCCESS });
 };
 
-
-
 export const listAllUsers = () => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_LIST_REQUEST });
@@ -108,6 +110,36 @@ export const listAllUsers = () => async (dispatch, getState) => {
       payload: error.response?.data.message
         ? error.response.data.message
         : error.message,
+    });
+  }
+};
+
+export const updateUserStatus = (_id, status) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_STATUS_UPDATE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: { Authorization: `Bearer ${userInfo.token}` },
+    };
+
+    const { data } = await axios.put(`/api/users`, { _id, status }, config);
+
+    dispatch({
+      type: USER_STATUS_UPDATE_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_STATUS_UPDATE_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

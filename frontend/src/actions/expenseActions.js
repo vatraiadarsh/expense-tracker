@@ -80,7 +80,6 @@ export const listAllExpense = () => async (dispatch, getState) => {
 
     const { data } = await axios.get(`/api/expenses`, config);
 
-    console.log(data);
     dispatch({
       type: EXPENSE_LIST_ALL_SUCCESS,
       payload: data,

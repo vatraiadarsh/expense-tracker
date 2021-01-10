@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import {
   Icon,
   Menu,
+  Button,
   Table,
   Loader,
   Message,
@@ -10,17 +10,17 @@ import {
 } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import { listByUserExpense } from "../../actions/expenseActions";
-import {listAllUsers} from "../../actions/userActions"
+import { listAllUsers } from "../../actions/userActions";
 
 function ListByUserExpense() {
   const dispatch = useDispatch();
 
   const expenseListByUser = useSelector((state) => state.expenseListByUser);
-  const { loading, error, expense } = expenseListByUser;
+  const { loading, error, expenses } = expenseListByUser;
 
   useEffect(() => {
     dispatch(listByUserExpense());
-    dispatch(listAllUsers())
+    dispatch(listAllUsers());
   }, [dispatch]);
   return (
     <>
@@ -41,37 +41,19 @@ function ListByUserExpense() {
               <Table.HeaderCell>Incurred On</Table.HeaderCell>
               <Table.HeaderCell>Recorded On</Table.HeaderCell>
               <Table.HeaderCell>Shared By</Table.HeaderCell>
+              <Table.HeaderCell>Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
           <Table.Body>
-            {expense.map((exp) => (
-              <>
-                <Table.Row>
-                  <Table.Cell>{exp.title}</Table.Cell>
-                  <Table.Cell>{exp.category}</Table.Cell>
-                  <Table.Cell>$ {exp.amount}</Table.Cell>
-                  <Table.Cell>{exp.notes}</Table.Cell>
-                  <Table.Cell>
-                    {new Date(exp.incurred_on).toDateString()}
-                  </Table.Cell>
-                  <Table.Cell>{exp.createdAt.substring(0, 10)}</Table.Cell>
-                  <Table.Cell>
-                    {exp.shared_by.length === 0 && <h5>No Share</h5>}
-                    {exp.shared_by.map((r) => (
-                      <>
-                        <strong>{r.label}  &nbsp;</strong>
-                      </>
-                    ))}
-                  </Table.Cell>
-                </Table.Row>
-              </>
+            {expenses.map((expense,i) => (
+              <List key={expense._id} expense={expense} />
             ))}
           </Table.Body>
 
           <Table.Footer>
             <Table.Row>
-              <Table.HeaderCell colSpan="7">
+              <Table.HeaderCell colSpan="8">
                 <Menu floated="right" pagination>
                   <Menu.Item as="a" icon>
                     <Icon name="chevron left" />
@@ -90,8 +72,32 @@ function ListByUserExpense() {
         </Table>
       )}
     </>
-  
   );
+
+  function List({ expense }) {
+    return (
+      <Table.Row>
+        <Table.Cell>{expense.title}</Table.Cell>
+        <Table.Cell>{expense.category}</Table.Cell>
+        <Table.Cell>$ {expense.amount}</Table.Cell>
+        <Table.Cell>{expense.notes}</Table.Cell>
+        <Table.Cell>{new Date(expense.incurred_on).toDateString()}</Table.Cell>
+        <Table.Cell>{expense.createdAt.substring(0, 10)}</Table.Cell>
+        <Table.Cell>
+          {expense.shared_by.length === 0 && <h5>No Share</h5>}
+          {expense.shared_by.map((r) => (
+            <>
+              <strong key={r._value}>{r.label} &nbsp;</strong>
+            </>
+          ))}
+        </Table.Cell>
+        <Table.Cell>
+          <Button color="linkedin" icon="edit outline" />
+          <Button color="youtube" icon="trash alternate" />
+        </Table.Cell>
+      </Table.Row>
+    );
+  }
 }
 
 export default ListByUserExpense;

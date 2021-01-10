@@ -5,7 +5,7 @@ function UserPage() {
   return (
     <>
       <Container>
-        <ListAllUsers />
+        <ListAllUsers/>
       </Container>
     </>
   );

@@ -3,8 +3,17 @@ import thunk from "redux-thunk";
 import logger from "redux-logger";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import { userRegisterReducer, userLoginReducer,usersListReducer} from "./reducers/userReducers";
-import { expenseCreateReducer,expenseListAllReducer,expenseListByUserReducer } from "./reducers/expenseReducers";
+import {
+  userRegisterReducer,
+  userLoginReducer,
+  usersListReducer,
+  userStatusUpdateReducer,
+} from "./reducers/userReducers";
+import {
+  expenseCreateReducer,
+  expenseListAllReducer,
+  expenseListByUserReducer,
+} from "./reducers/expenseReducers";
 
 const userInfoFromStorege = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -18,9 +27,10 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userLogin: userLoginReducer,
   expenseCreate: expenseCreateReducer,
-  expenseListAll:expenseListAllReducer,
-  expenseListByUser:expenseListByUserReducer,
-  usersList:usersListReducer,
+  expenseListAll: expenseListAllReducer,
+  expenseListByUser: expenseListByUserReducer,
+  usersList: usersListReducer,
+  userStatusUpdate: userStatusUpdateReducer,
 });
 
 const middleware = [thunk, logger];

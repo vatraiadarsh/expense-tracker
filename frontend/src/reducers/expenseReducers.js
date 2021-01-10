@@ -33,13 +33,13 @@ export const expenseCreateReducer = (state = {}, action) => {
   }
 };
 
-export const expenseListAllReducer = (state = { expense: [] }, action) => {
+export const expenseListAllReducer = (state = { expenses: [] }, action) => {
   switch (action.type) {
     case EXPENSE_LIST_ALL_REQUEST:
-      return { loading: true, expense: [] };
+      return { loading: true, expenses: [] };
 
     case EXPENSE_LIST_ALL_SUCCESS:
-      return { loading: false, success: true, expense: action.payload };
+      return { loading: false, success: true, expenses: action.payload };
 
     case EXPENSE_LIST_ALL_FAILURE:
       return { loading: false, error: action.payload };
@@ -48,16 +48,13 @@ export const expenseListAllReducer = (state = { expense: [] }, action) => {
   }
 };
 
-export const expenseListByUserReducer = (
-  state = { expense: [],  },
-  action
-) => {
+export const expenseListByUserReducer = (state = { expenses: [] }, action) => {
   switch (action.type) {
     case EXPENSE_LIST_BY_USER_REQUEST:
-      return { loading: true, expense: [] };
+      return { loading: true, expenses: [] };
 
     case EXPENSE_LIST_BY_USER_SUCCESS:
-      return { loading: false, success: true, expense: action.payload };
+      return { loading: false, success: true, expenses: action.payload };
 
     case EXPENSE_LIST_BY_USER_FAILURE:
       return { loading: false, error: action.payload };
