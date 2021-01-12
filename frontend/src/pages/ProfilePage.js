@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import UpdateProfile from "../components/Profile/UpdateProfile";
 
 function ProfilePage({ history }) {
   const userLogin = useSelector((state) => state.userLogin);
@@ -11,7 +12,13 @@ function ProfilePage({ history }) {
     }
   }, []);
 
-  return <div>profile page</div>;
+  return (
+    <>
+      <UpdateProfile />
+    </>
+  );
 }
 
 export default ProfilePage;
+
+

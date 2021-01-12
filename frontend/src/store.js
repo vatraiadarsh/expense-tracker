@@ -8,6 +8,8 @@ import {
   userLoginReducer,
   usersListReducer,
   userStatusUpdateReducer,
+  userDetailsReducer,
+  userProfileUpdateReducer,
 } from "./reducers/userReducers";
 import {
   expenseCreateReducer,
@@ -31,6 +33,8 @@ const reducer = combineReducers({
   expenseListByUser: expenseListByUserReducer,
   usersList: usersListReducer,
   userStatusUpdate: userStatusUpdateReducer,
+  userDetails:userDetailsReducer,
+  userProfileUpdate:userProfileUpdateReducer,
 });
 
 const middleware = [thunk, logger];
