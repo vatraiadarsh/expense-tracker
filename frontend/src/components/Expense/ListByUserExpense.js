@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Icon,
   Menu,
@@ -6,22 +6,33 @@ import {
   Table,
   Loader,
   Message,
+  Modal,
   Dimmer,
 } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
+import UpdateExpanse from "../Expense/UpdateExpanse";
 import { listByUserExpense } from "../../actions/expenseActions";
 import { listAllUsers } from "../../actions/userActions";
+import { useHistory } from "react-router-dom";
 
 function ListByUserExpense() {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const expenseListByUser = useSelector((state) => state.expenseListByUser);
   const { loading, error, expenses } = expenseListByUser;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
-    dispatch(listByUserExpense());
-    dispatch(listAllUsers());
-  }, [dispatch]);
+    if (!userInfo) {
+      history.push("/login");
+    } else {
+      dispatch(listByUserExpense());
+      dispatch(listAllUsers());
+    }
+  }, [dispatch, history, userInfo]);
   return (
     <>
       {loading ? (
@@ -46,7 +57,7 @@ function ListByUserExpense() {
           </Table.Header>
 
           <Table.Body>
-            {expenses.map((expense,i) => (
+            {expenses.map((expense, i) => (
               <List key={expense._id} expense={expense} />
             ))}
           </Table.Body>
@@ -75,6 +86,8 @@ function ListByUserExpense() {
   );
 
   function List({ expense }) {
+    const [modal, setModal] = useState(false);
+
     return (
       <Table.Row>
         <Table.Cell>{expense.title}</Table.Cell>
@@ -84,7 +97,7 @@ function ListByUserExpense() {
         <Table.Cell>{new Date(expense.incurred_on).toDateString()}</Table.Cell>
         <Table.Cell>{expense.createdAt.substring(0, 10)}</Table.Cell>
         <Table.Cell>
-          {expense.shared_by.length === 0 && <h5>No Share</h5>}
+          {expense?.shared_by?.length === 0 && <h5>No Share</h5>}
           {expense.shared_by.map((r) => (
             <>
               <strong key={r._value}>{r.label} &nbsp;</strong>
@@ -92,7 +105,22 @@ function ListByUserExpense() {
           ))}
         </Table.Cell>
         <Table.Cell>
-          <Button color="linkedin" icon="edit outline" />
+          <Button
+            color="linkedin"
+            icon="edit outline"
+            onClick={() => setModal(true)}
+          />
+          <Modal
+            closeIcon
+            onClose={() => setModal(false)}
+            onOpen={() => setModal(true)}
+            open={modal}
+          >
+            <Modal.Header>Edit an Expense</Modal.Header>
+            <Modal.Content>
+              <UpdateExpanse expense={expense} />
+            </Modal.Content>
+          </Modal>
           <Button color="youtube" icon="trash alternate" />
         </Table.Cell>
       </Table.Row>

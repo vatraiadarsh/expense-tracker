@@ -97,7 +97,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     if (req.body.password) {
-      user.password = req.user.password;
+      user.password = req.body.password;
     }
     const updatedUser = await user.save();
     res.json({
@@ -105,7 +105,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
-      status: updatedUser.status,
+      status:updatedUser.status,
       token: generateToken(updatedUser._id),
     });
   } else {

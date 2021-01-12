@@ -20,6 +20,7 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAILURE,
+  USER_DETAILS_RESET,
 } from "../constants/userConstants";
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -88,6 +89,7 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch({ type: USER_LOGOUT_SUCCESS });
+  dispatch({ type: USER_DETAILS_RESET });
 };
 
 export const listAllUsers = () => async (dispatch, getState) => {

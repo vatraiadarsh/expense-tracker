@@ -101,7 +101,7 @@ const LoginPage = ({history }) => {
         <Message attached="bottom">
           <Icon name="user circle" />
           Doesn't had an account? &nbsp;
-          <Link to= "/login">
+          <Link to= "/register">
             <a>Register here</a>&nbsp;
           </Link>
           Instead

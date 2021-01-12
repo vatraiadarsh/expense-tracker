@@ -13,32 +13,28 @@ import {
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { useDispatch, useSelector } from "react-redux";
-import { createExpense } from "../../actions/expenseActions";
+import { updateExpense } from "../../actions/expenseActions";
 
-function CreateExpense() {
+function UpdateExpanse({ expense: exp }) {
   const dispatch = useDispatch();
-
-  const expenseCreate = useSelector((state) => state.expenseCreate);
-  const { loading, error, success } = expenseCreate;
 
   const usersList = useSelector((state) => state.usersList);
   const { users } = usersList;
+
+  const expenseUpdate = useSelector((state) => state.expenseUpdate);
+  const { error, success, loading } = expenseUpdate;
 
   const INITIAL_STATE = {
     title: "",
     amount: "",
     category: "",
-    incurred_on: new Date(),
+    incurred_on: "",
     shared_by: [],
     notes: "",
   };
   const [expense, setExpense] = useState(INITIAL_STATE);
   const [disabled, setDisabled] = useState(false);
 
-  useEffect(() => {
-    const isExpense = Object.values(expense).every((el) => Boolean(el));
-    isExpense ? setDisabled(false) : setDisabled(true);
-  }, [expense]);
 
   const handlechange = (event) => {
     const { name, value } = event.target;
@@ -53,11 +49,39 @@ function CreateExpense() {
     setExpense((prevState) => ({ ...prevState, shared_by: selectedOption }));
   };
 
+  useEffect(() => {
+    const isExpense = Object.values(expense).every((el) => Boolean(el));
+    isExpense ? setDisabled(false) : setDisabled(true);
+  }, [expense]);
+
+
+  useEffect(() => {
+    const isExpense = Object.values(expense).every((el) => Boolean(el));
+    if (isExpense === false) {
+      setExpense({
+        title: exp.title,
+        amount: exp.amount,
+        category: exp.category,
+        incurred_on: exp.incurred_on,
+        shared_by: exp.shared_by,
+        notes: exp.notes,
+      });
+    }
+  }, [exp]);
+
   const submitHandler = (e) => {
     const { title, amount, category, incurred_on, shared_by, notes } = expense;
     e.preventDefault();
     dispatch(
-      createExpense(title, amount, category, incurred_on, shared_by, notes)
+      updateExpense({
+        _id: exp._id,
+        title,
+        amount,
+        category,
+        incurred_on,
+        shared_by,
+        notes,
+      })
     );
   };
 
@@ -71,13 +95,6 @@ function CreateExpense() {
   return (
     <>
       <Container text>
-        <Message
-          attached
-          icon="plus"
-          header="Expenses"
-          content="Create a new Expense"
-        />
-
         <Form
           loading={loading}
           success={Boolean(success)}
@@ -85,6 +102,11 @@ function CreateExpense() {
           onSubmit={submitHandler}
         >
           <Message error header="Oops" content={error} />
+          <Message
+            success
+            header="Success !!"
+            content="Expense Updated successfully"
+          />
 
           <Segment>
             <Form.Input
@@ -159,11 +181,11 @@ function CreateExpense() {
             />
 
             <SematicBtn
-              content="Create Expense"
+              content="Update Expense"
               type="submit"
-              icon="signup"
-              disabled={disabled || loading}
-              color="google plus"
+              icon="check circle"
+              disabled={loading || success || disabled}
+              color="green"
             />
           </Segment>
         </Form>
@@ -181,4 +203,4 @@ function CreateExpense() {
   );
 }
 
-export default CreateExpense;
+export default UpdateExpanse;

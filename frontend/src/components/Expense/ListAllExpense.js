@@ -15,8 +15,8 @@ import { useHistory } from "react-router-dom";
 
 function ListAllExpense() {
   const dispatch = useDispatch();
-
   const history = useHistory();
+
   const expenseListAll = useSelector((state) => state.expenseListAll);
   const { loading, error, expenses } = expenseListAll;
 
@@ -56,7 +56,7 @@ function ListAllExpense() {
             {expenses.map((expense) => (
               <Table.Row>
                 <Table.Cell>
-                  {expense.recorded_by._id === userInfo._id ? (
+                  {expense?.recorded_by?._id === userInfo?._id ? (
                     <Label ribbon color="red">
                       {expense.recorded_by.name}
                     </Label>

@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CreateExpense from "../components/Expense/CreateExpense";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import ListByUserExpense from "../components/Expense/ListByUserExpense";
 
 import { Button, Segment, Header, Container, Modal } from "semantic-ui-react";
 
-const ExpensePage = () => {
+const ExpensePage = ({ history }) => {
   const [modal, setModal] = useState(false);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
+  }, [userInfo, history]);
 
   return (
     <>
@@ -40,7 +46,7 @@ const ExpensePage = () => {
               <CreateExpense />
             </Modal.Content>
           </Modal>
-          <ListByUserExpense key={userInfo._id} />
+          <ListByUserExpense/>
         </Segment>
       </Container>
     </>

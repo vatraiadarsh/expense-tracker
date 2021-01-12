@@ -4,7 +4,6 @@ import {
   Button,
   Message,
   Segment,
-  Icon,
   Container,
   Header,
 } from "semantic-ui-react";
@@ -25,14 +24,14 @@ const UpdateProfile = () => {
   const { userInfo } = userLogin;
 
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
+  const { loading, user } = userDetails;
 
   const userProfileUpdate = useSelector((state) => state.userProfileUpdate);
-  const { success } = userProfileUpdate;
+  const { success, error } = userProfileUpdate;
 
   useEffect(() => {
     if (!userInfo) {
-      history.pushState("/login");
+      history.push("/login");
     } else {
       if (!user.name || !user.email) {
         dispatch(getUserDetails("profile"));
@@ -44,7 +43,7 @@ const UpdateProfile = () => {
   }, [dispatch, history, userInfo, user]);
 
   const submitHandler = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     if (password !== confirmPassword) {
       setMessage(true);
     } else {
@@ -121,7 +120,7 @@ const UpdateProfile = () => {
               content="Update"
               type="submit"
               icon="check circle"
-              disabled={loading}
+              disabled={loading || success}
               color="green"
             />
           </Segment>
