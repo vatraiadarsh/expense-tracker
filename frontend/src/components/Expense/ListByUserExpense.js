@@ -6,12 +6,13 @@ import {
   Table,
   Loader,
   Message,
+  Header,
   Modal,
   Dimmer,
 } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateExpanse from "../Expense/UpdateExpanse";
-import { listByUserExpense } from "../../actions/expenseActions";
+import { deleteExpense, listByUserExpense } from "../../actions/expenseActions";
 import { listAllUsers } from "../../actions/userActions";
 import { useHistory } from "react-router-dom";
 
@@ -24,6 +25,13 @@ function ListByUserExpense() {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const expenseDelete = useSelector((state) => state.expenseDelete);
+  const {
+    error: expenseDeleteError,
+    success: expenseDeleteSuccess,
+    loading: expenseDeleteLoading,
+  } = expenseDelete;
 
   useEffect(() => {
     if (!userInfo) {
@@ -86,7 +94,12 @@ function ListByUserExpense() {
   );
 
   function List({ expense }) {
-    const [modal, setModal] = useState(false);
+    const [updatemodal, setUpdateModal] = useState(false);
+    const [deletemodal, setDeleteModal] = useState(false);
+
+    function handleDelete(id) {
+      dispatch(deleteExpense(id));
+    }
 
     return (
       <Table.Row>
@@ -108,20 +121,74 @@ function ListByUserExpense() {
           <Button
             color="linkedin"
             icon="edit outline"
-            onClick={() => setModal(true)}
+            onClick={() => setUpdateModal(true)}
           />
           <Modal
             closeIcon
-            onClose={() => setModal(false)}
-            onOpen={() => setModal(true)}
-            open={modal}
+            onClose={() => setUpdateModal(false)}
+            onOpen={() => setUpdateModal(true)}
+            open={updatemodal}
           >
             <Modal.Header>Edit an Expense</Modal.Header>
             <Modal.Content>
               <UpdateExpanse expense={expense} />
             </Modal.Content>
           </Modal>
-          <Button color="youtube" icon="trash alternate" />
+          <Button
+            color="youtube"
+            icon="trash alternate"
+            onClick={() => setDeleteModal(true)}
+          />
+          <Modal
+            closeIcon
+            onClose={() => setDeleteModal(false)}
+            onOpen={() => setDeleteModal(true)}
+            open={deletemodal}
+            dimmer="blurring"
+          >
+            {expenseDeleteSuccess ? (
+              <Header as="h5" inverted color="red">
+                This expense is already deleted!&nbsp;&nbsp;Please reload the
+                page to view the changes
+              </Header>
+            ) : (
+              <Modal.Header>Confirm Delete</Modal.Header>
+            )}
+            <Modal.Content>
+              {expenseDeleteSuccess ? (
+                <Header
+                  as="h3"
+                  color="green"
+                  content="Expense Deleted Successfully"
+                />
+              ) : (
+                <Header
+                  as="h3"
+                  color="red"
+                  content=" Are you sure you want to delete this Expense ?"
+                />
+              )}
+              {expenseDeleteLoading ? (
+                <Dimmer active>
+                  <Loader />
+                </Dimmer>
+              ) : (
+                ""
+              )}
+              {expenseDeleteError ? <Message negative content={error} /> : ""}
+            </Modal.Content>
+            <Modal.Actions>
+              <Button content="cancel" onClick={() => setDeleteModal(false)} />
+              <Button
+                negative
+                icon="trash"
+                labelPosition="right"
+                content="Delete"
+                disabled={expenseDeleteSuccess}
+                onClick={() => handleDelete(expense._id)}
+              />
+            </Modal.Actions>
+          </Modal>
         </Table.Cell>
       </Table.Row>
     );

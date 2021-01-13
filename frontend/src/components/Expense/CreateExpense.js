@@ -25,12 +25,12 @@ function CreateExpense() {
   const { users } = usersList;
 
   const INITIAL_STATE = {
-    title: "",
-    amount: "",
-    category: "",
+    title: "klsdf",
+    amount: "32",
+    category: "sdfsdf",
     incurred_on: new Date(),
     shared_by: [],
-    notes: "",
+    notes: "lkmclds",
   };
   const [expense, setExpense] = useState(INITIAL_STATE);
   const [disabled, setDisabled] = useState(false);

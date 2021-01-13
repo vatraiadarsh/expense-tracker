@@ -83,9 +83,21 @@ export const updateExpense = asyncHandler(async (req, res) => {
     expense.incurred_on = req.body.incurred_on || expense.incurred_on;
     expense.notes = req.body.notes || expense.notes;
     expense.shared_by = req.body.shared_by || expense.shared_by;
-   
+
     const updatedExpense = await expense.save();
     res.json(updatedExpense);
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
+export const deleteExpense = asyncHandler(async (req, res) => {
+  const expense = await Expense.findById(req.params.id);
+
+  if (expense) {
+    await expense.remove();
+    res.json({ message: "Product removed" });
   } else {
     res.status(404);
     throw new Error("Product not found");

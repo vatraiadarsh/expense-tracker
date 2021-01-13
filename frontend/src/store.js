@@ -16,7 +16,8 @@ import {
   expenseListAllReducer,
   expenseListByUserReducer,
   expenseDetailsReducer,
-  expenseUpdateReducer
+  expenseUpdateReducer,
+  expenseDeleteReducer,
 } from "./reducers/expenseReducers";
 
 const userInfoFromStorege = localStorage.getItem("userInfo")
@@ -38,7 +39,8 @@ const reducer = combineReducers({
   userDetails:userDetailsReducer,
   userProfileUpdate:userProfileUpdateReducer,
   expenseDetails:expenseDetailsReducer,
-  expenseUpdate:expenseUpdateReducer
+  expenseUpdate:expenseUpdateReducer,
+  expenseDelete:expenseDeleteReducer
 });
 
 const middleware = [thunk, logger];

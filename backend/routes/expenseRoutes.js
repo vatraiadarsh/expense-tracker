@@ -9,6 +9,7 @@ import {
   listExpenseByUser,
   getExpenseById,
   updateExpense,
+  deleteExpense,
 } from "../controllers/expenseController.js";
 
 router.route("/").post(protect, createExpense).get(protect, listAllExpense);
@@ -17,6 +18,10 @@ router
   .post(protect, createExpense)
   .get(protect, listExpenseByUser);
 
-router.route("/:id").get(protect, getExpenseById).put(protect, updateExpense);
+router
+  .route("/:id")
+  .get(protect, getExpenseById)
+  .put(protect, updateExpense)
+  .delete(protect, deleteExpense);
 
 export default router;

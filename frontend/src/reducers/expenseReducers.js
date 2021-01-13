@@ -2,6 +2,9 @@ import {
   EXPENSE_CREATE_FAILURE,
   EXPENSE_CREATE_REQUEST,
   EXPENSE_CREATE_SUCCESS,
+  EXPENSE_DELETE_FAILURE,
+  EXPENSE_DELETE_REQUEST,
+  EXPENSE_DELETE_SUCCESS,
   EXPENSE_DETAILS_FAILURE,
   EXPENSE_DETAILS_REQUEST,
   EXPENSE_DETAILS_SUCCESS,
@@ -91,9 +94,25 @@ export const expenseUpdateReducer = (state = { expense: {} }, action) => {
       return { loading: true };
 
     case EXPENSE_UPDATE_SUCCESS:
-      return { loading: false,success:true, expense: action.payload };
+      return { loading: false, success: true, expense: action.payload };
 
     case EXPENSE_UPDATE_FAILURE:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+export const expenseDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case EXPENSE_DELETE_REQUEST:
+      return { loading: true };
+
+    case EXPENSE_DELETE_SUCCESS:
+      return { loading: false, success: true };
+
+    case EXPENSE_DELETE_FAILURE:
       return { loading: false, error: action.payload };
 
     default:

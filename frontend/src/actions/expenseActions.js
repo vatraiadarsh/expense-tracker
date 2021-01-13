@@ -3,6 +3,9 @@ import {
   EXPENSE_CREATE_FAILURE,
   EXPENSE_CREATE_REQUEST,
   EXPENSE_CREATE_SUCCESS,
+  EXPENSE_DELETE_FAILURE,
+  EXPENSE_DELETE_REQUEST,
+  EXPENSE_DELETE_SUCCESS,
   EXPENSE_DETAILS_FAILURE,
   EXPENSE_DETAILS_REQUEST,
   EXPENSE_DETAILS_SUCCESS,
@@ -17,6 +20,7 @@ import {
   EXPENSE_UPDATE_SUCCESS,
 } from "../constants/expenseConstants";
 
+import { logout } from "./userActions";
 
 export const createExpense = (
   title,
@@ -174,7 +178,11 @@ export const updateExpense = (expense) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(`/api/expenses/${expense._id}`,expense ,config);
+    const { data } = await axios.put(
+      `/api/expenses/${expense._id}`,
+      expense,
+      config
+    );
 
     dispatch({
       type: EXPENSE_UPDATE_SUCCESS,
@@ -186,6 +194,42 @@ export const updateExpense = (expense) => async (dispatch, getState) => {
       payload: error.response?.data.message
         ? error.response.data.message
         : error.message,
+    });
+  }
+};
+
+export const deleteExpense = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: EXPENSE_DELETE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.delete(`/api/expenses/${id}`, config);
+
+    dispatch({
+      type: EXPENSE_DELETE_SUCCESS,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: EXPENSE_DELETE_FAILURE,
+      payload: message,
     });
   }
 };
